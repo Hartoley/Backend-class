@@ -16,6 +16,19 @@ app.use(express.urlencoded({ extended: true }))
 
 const userRoutes = require('./routes/user.routes')
 
+app.get('/', (req, res, next) => {
+    const loop = () => {
+        let count = 10
+        for (let i = 6; i > count; i++) {
+            console.log(i)
+        }
+    }
+
+    loop()
+    console.log(`Received ${req.method} request for ${req.url}`)
+    next()
+})
+
 app.use('/users', userRoutes)
 
 app.get('/', (req, res) => {
