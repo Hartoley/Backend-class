@@ -1,6 +1,19 @@
 const User = require('../model/userModel')
 const bcrypt = require('bcryptjs');
 
+
+const user = { name: "John Doe", email: "boluwa@gmail.com:", password: "password123" }
+const user1 = { name: "John Doe 1", email: "boluwa@gmail11.com:", password: "password222123" }
+const user2 = { name: "John Doe 2", email: "boluwa@gmail2222.com:", password: "password1www23" }
+const data = [user, user1, user2,]
+
+console.log("Data before loop:", data[0])
+
+data.forEach((item, index) => {
+    item.name
+    console.log(`Data at index ${index} after loop:`, item)
+})
+
 const signup = async (req, res) => {
     const { firstName, lastName, email, password } = req.body
     if (!firstName || !lastName || !email || !password) {
@@ -15,6 +28,14 @@ const signup = async (req, res) => {
     await User.create({ firstName, lastName, email, password })
 
     res.status(200).send({ message: "User signed up successfully" })
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function greet(name) {
+    return 'Hello' + name + "!"
 }
 
 const login = async (req, res) => {
@@ -64,14 +85,14 @@ const updateUser = async (req, res) => {
 
     await user.save()
 
-    constUserData = {
+    const UserData = {
         id: user._id,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName
     }
 
-    res.status(200).send({ message: "User updated successfully", user: constUserData })
+    res.status(200).send({ message: "User updated successfully", user: UserData })
 }
 
 const updatePassword = async (req, res) => {
@@ -96,10 +117,10 @@ const updatePassword = async (req, res) => {
 }
 
 const loop = () => {
-    let count = 10
-    for (let i = 6; i > count; i++) {
+    let count = 6
+    for (let i = 10; i > count; i--) {
         console.log(i)
     }
 }
 
-module.exports = { signup, login, loop, updateUser, updatePassword }
+module.exports = { signup, login, loop, updateUser, updatePassword, sleep, greet }
