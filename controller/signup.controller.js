@@ -14,6 +14,11 @@ data.forEach((item, index) => {
     console.log(`Data at index ${index} after loop:`, item)
 })
 
+const generateAccountNumber = () => {
+    const randomNum = Math.floor(Math.random() * 10000000000)
+    return randomNum.toString().padStart(10, '0')
+}
+
 const signup = async (req, res) => {
     const { firstName, lastName, email, password } = req.body
     if (!firstName || !lastName || !email || !password) {
@@ -25,7 +30,12 @@ const signup = async (req, res) => {
         return res.status(400).send({ message: "Email has been used" })
     }
 
-    await User.create({ firstName, lastName, email, password })
+    generateAccountNumber();
+
+
+    const accountNumber = generateAccountNumber;
+
+    await User.create({ firstName, lastName, email, password, accountNumber })
 
     res.status(200).send({ message: "User signed up successfully" })
 }
@@ -37,6 +47,8 @@ function sleep(ms) {
 function greet(name) {
     return 'Hello' + name + "!"
 }
+
+
 
 const login = async (req, res) => {
     console.log(
