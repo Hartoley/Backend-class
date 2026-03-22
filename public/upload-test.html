@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Upload Test</title>
+    <title>Profile Manager</title>
     <style>
       * {
         margin: 0;
@@ -24,39 +24,105 @@
         background: white;
         border-radius: 16px;
         padding: 40px;
-        width: 420px;
+        width: 440px;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
       }
 
       h2 {
         font-size: 20px;
         color: #1a1a2e;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
       }
-
-      p.subtitle {
+      .subtitle {
         font-size: 13px;
         color: #888;
-        margin-bottom: 28px;
+        margin-bottom: 24px;
+      }
+
+      .input-group {
+        margin-bottom: 16px;
+      }
+      .input-group label {
+        font-size: 13px;
+        color: #555;
+        display: block;
+        margin-bottom: 6px;
+      }
+      .input-group input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid #d0d5dd;
+        border-radius: 10px;
+        font-size: 14px;
+        outline: none;
+        transition: border 0.2s;
+      }
+      .input-group input:focus {
+        border-color: #6c63ff;
+      }
+
+      .profile-section {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 20px;
+        padding: 14px;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        background: #fafafa;
+      }
+      .profile-section img {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #6c63ff;
+      }
+      .profile-section .info {
+        flex: 1;
+      }
+      .profile-section .info .name {
+        font-weight: 600;
+        font-size: 15px;
+        color: #1a1a2e;
+      }
+      .profile-section .info .email {
+        font-size: 12px;
+        color: #888;
+        margin-top: 2px;
+      }
+
+      #fetchBtn {
+        padding: 8px 16px;
+        background: #6c63ff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.2s;
+      }
+      #fetchBtn:hover {
+        background: #574fd6;
       }
 
       .drop-zone {
         border: 2px dashed #d0d5dd;
         border-radius: 12px;
-        padding: 36px 20px;
+        padding: 30px 20px;
         text-align: center;
         cursor: pointer;
         transition: all 0.2s;
         background: #fafafa;
         position: relative;
       }
-
       .drop-zone:hover,
       .drop-zone.dragover {
         border-color: #6c63ff;
         background: #f3f1ff;
       }
-
       .drop-zone input[type="file"] {
         position: absolute;
         inset: 0;
@@ -65,46 +131,39 @@
         width: 100%;
         height: 100%;
       }
-
       .drop-zone .icon {
-        font-size: 36px;
-        margin-bottom: 10px;
+        font-size: 30px;
+        margin-bottom: 8px;
       }
-
       .drop-zone .label {
-        font-size: 14px;
+        font-size: 13px;
         color: #555;
       }
-
       .drop-zone .label span {
         color: #6c63ff;
         font-weight: 600;
       }
-
       .drop-zone .hint {
-        font-size: 12px;
+        font-size: 11px;
         color: #aaa;
         margin-top: 4px;
       }
 
       #preview {
         display: none;
-        margin-top: 16px;
+        margin-top: 12px;
         border-radius: 10px;
         overflow: hidden;
         border: 1px solid #eee;
-        position: relative;
       }
-
       #preview img {
         width: 100%;
-        height: 180px;
+        height: 160px;
         object-fit: cover;
         display: block;
       }
-
       #preview .file-name {
-        padding: 8px 12px;
+        padding: 7px 12px;
         font-size: 12px;
         color: #555;
         background: #fafafa;
@@ -114,9 +173,9 @@
         text-overflow: ellipsis;
       }
 
-      button {
+      .upload-btn {
         width: 100%;
-        margin-top: 20px;
+        margin-top: 16px;
         padding: 13px;
         background: #6c63ff;
         color: white;
@@ -127,59 +186,25 @@
         cursor: pointer;
         transition: background 0.2s;
       }
-
-      button:hover {
+      .upload-btn:hover {
         background: #574fd6;
       }
-      button:disabled {
+      .upload-btn:disabled {
         background: #b0aee8;
         cursor: not-allowed;
-      }
-
-      #result {
-        margin-top: 20px;
-        border-radius: 10px;
-        overflow: hidden;
-        display: none;
-      }
-
-      .result-header {
-        padding: 10px 14px;
-        font-size: 13px;
-        font-weight: 600;
-        color: white;
-      }
-
-      .result-header.success {
-        background: #22c55e;
-      }
-      .result-header.error {
-        background: #ef4444;
-      }
-
-      #result pre {
-        background: #1e1e2e;
-        color: #cdd6f4;
-        font-size: 12px;
-        padding: 14px;
-        overflow-x: auto;
-        margin: 0;
-        max-height: 200px;
       }
 
       .loader {
         display: none;
         text-align: center;
-        margin-top: 16px;
+        margin-top: 14px;
         font-size: 13px;
         color: #888;
       }
-
       .loader span {
         display: inline-block;
         animation: pulse 1.2s infinite;
       }
-
       @keyframes pulse {
         0%,
         100% {
@@ -189,20 +214,71 @@
           opacity: 0.3;
         }
       }
+
+      #result {
+        margin-top: 16px;
+        border-radius: 10px;
+        overflow: hidden;
+        display: none;
+      }
+      .result-header {
+        padding: 9px 14px;
+        font-size: 13px;
+        font-weight: 600;
+        color: white;
+      }
+      .result-header.success {
+        background: #22c55e;
+      }
+      .result-header.error {
+        background: #ef4444;
+      }
+      #result pre {
+        background: #1e1e2e;
+        color: #cdd6f4;
+        font-size: 12px;
+        padding: 14px;
+        overflow-x: auto;
+        margin: 0;
+        max-height: 180px;
+      }
     </style>
   </head>
   <body>
     <div class="card">
-      <h2>📤 Image Upload Tester</h2>
-      <p class="subtitle">Test your <code>/users/upload</code> endpoint</p>
+      <h2>🖼️ Profile Manager</h2>
+      <p class="subtitle">Fetch user info & upload / update profile picture</p>
+
+      <div class="input-group">
+        <label for="userIdInput">User ID</label>
+        <input
+          type="text"
+          id="userIdInput"
+          placeholder="Paste MongoDB _id here..."
+        />
+      </div>
+
+      <div class="profile-section">
+        <img
+          id="currentPic"
+          src="https://ui-avatars.com/api/?background=6c63ff&color=fff&name=?"
+          alt="Profile"
+        />
+        <div class="info">
+          <div class="name" id="userName">—</div>
+          <div class="email" id="userEmail">—</div>
+        </div>
+        <button id="fetchBtn" onclick="fetchUser()">Fetch</button>
+      </div>
 
       <div class="drop-zone" id="dropZone">
         <input
           type="file"
           id="fileInput"
+          name="image"
           accept="image/jpg,image/jpeg,image/png"
         />
-        <div class="icon">🖼️</div>
+        <div class="icon">📤</div>
         <div class="label"><span>Click to choose</span> or drag & drop</div>
         <div class="hint">JPG, JPEG, PNG only</div>
       </div>
@@ -212,8 +288,8 @@
         <div class="file-name" id="fileName"></div>
       </div>
 
-      <button id="uploadBtn" disabled onclick="uploadFile()">
-        Upload Image
+      <button class="upload-btn" id="uploadBtn" disabled onclick="uploadPic()">
+        Upload Profile Picture
       </button>
 
       <div class="loader"><span>⏳ Uploading to Cloudinary...</span></div>
@@ -225,6 +301,10 @@
     </div>
 
     <script>
+      const BASE_URL = "http://localhost:5000/users";
+      const DEFAULT_PIC =
+        "https://ui-avatars.com/api/?background=6c63ff&color=fff&name=";
+
       const fileInput = document.getElementById("fileInput");
       const uploadBtn = document.getElementById("uploadBtn");
       const preview = document.getElementById("preview");
@@ -235,7 +315,34 @@
       const resultBody = document.getElementById("resultBody");
       const loader = document.querySelector(".loader");
       const dropZone = document.getElementById("dropZone");
+      const currentPic = document.getElementById("currentPic");
+      const userName = document.getElementById("userName");
+      const userEmail = document.getElementById("userEmail");
 
+      // ── Fetch user ───────────────────────────────────────────────
+      async function fetchUser() {
+        const id = document.getElementById("userIdInput").value.trim();
+        if (!id) return alert("Please enter a User ID first.");
+
+        try {
+          const res = await fetch(`${BASE_URL}/${id}`);
+          const data = await res.json();
+
+          if (!res.ok) return alert(data.message || "User not found.");
+
+          const { user } = data;
+          userName.textContent = `${user.firstName} ${user.lastName}`;
+          userEmail.textContent = user.email;
+          currentPic.src =
+            user.profileImage ||
+            `${DEFAULT_PIC}${user.firstName}+${user.lastName}`;
+          uploadBtn.disabled = false;
+        } catch (err) {
+          alert("Network error: " + err.message);
+        }
+      }
+
+      // ── Drag & drop ──────────────────────────────────────────────
       fileInput.addEventListener("change", () =>
         handleFile(fileInput.files[0]),
       );
@@ -260,36 +367,40 @@
           previewImg.src = e.target.result;
           fileName.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
           preview.style.display = "block";
-          uploadBtn.disabled = false;
           result.style.display = "none";
         };
         reader.readAsDataURL(file);
       }
 
-      async function uploadFile() {
+      // ── Upload ───────────────────────────────────────────────────
+      async function uploadPic() {
+        const id = document.getElementById("userIdInput").value.trim();
         const file = fileInput.files[0];
-        if (!file) return;
+
+        if (!id) return alert("Please fetch a user first.");
+        if (!file) return alert("Please select an image first.");
 
         const formData = new FormData();
-        formData.append("image", file);
+        formData.append("image", file); // must match upload.single("image")
 
         uploadBtn.disabled = true;
         loader.style.display = "block";
         result.style.display = "none";
 
         try {
-          const res = await fetch("http://localhost:5000/users/upload", {
+          const res = await fetch(`${BASE_URL}/${id}/upload-pic`, {
             method: "POST",
-            body: formData,
+            body: formData, // NO Content-Type header — browser sets it with boundary
           });
-
           const data = await res.json();
+
           loader.style.display = "none";
           result.style.display = "block";
 
           if (res.ok) {
-            resultHeader.textContent = "✅ Upload Successful!";
+            resultHeader.textContent = "✅ Profile picture updated!";
             resultHeader.className = "result-header success";
+            currentPic.src = data.profileImage; // ← consistent field name
           } else {
             resultHeader.textContent = "❌ Upload Failed";
             resultHeader.className = "result-header error";

@@ -1,5 +1,6 @@
 const User = require('../model/userModel')
 const bcrypt = require('bcryptjs');
+const upload = require("../middleware/upload");
 
 
 const user = { name: "John Doe", email: "boluwa@gmail.com:", password: "password123" }
@@ -128,6 +129,45 @@ const updatePassword = async (req, res) => {
 
 }
 
+const uploadProfileImage = async (req, res) => {
+    const id = req.params.id
+
+    if (!id) {
+        return res.status(400).json({ message: "ID is required" })
+    }
+
+    try {
+        const user = await User.findById(id)
+        if (!user) {
+            return res.status(404).json({ message: "User not found" })
+        }
+
+        // Everything must live inside this callback
+        upload.single("image")(req, res, async (err) => {
+            if (err) {
+                return res.status(500).json({ error: err.message })
+            }
+            if (!req.file) {
+                return res.status(400).json({ error: "No file received." })
+            }
+
+            try {
+                user.profileImage = req.file.path
+                await user.save()
+                return res.status(200).json({
+                    message: "Profile image updated successfully",
+                    profileImage: user.profileImage
+                })
+            } catch (saveError) {
+                return res.status(500).json({ message: "Failed to save", error: saveError.message })
+            }
+        })
+
+    } catch (error) {
+        return res.status(500).json({ message: "Server error", error: error.message })
+    }
+}
+
 const loop = () => {
     let count = 6
     for (let i = 10; i > count; i--) {
@@ -135,4 +175,29 @@ const loop = () => {
     }
 }
 
-module.exports = { signup, login, loop, updateUser, updatePassword, sleep, greet }
+const fetchUser = async (req, res) => {
+
+
+    const id = req.params.id
+    console.log("Received Id:", id)
+
+    if (!id) {
+        return res.status(400).send({ message: "ID is required" })
+    }
+    try {
+        const user = await User.findById(id).select("-password")
+        if (!user) {
+            console.log("User not found")
+            return null
+        }
+
+        return res.status(200).send({ message: "User fetched successfully", user })
+
+
+    } catch (error) {
+        console.error("Error fetching user:", error)
+        return null
+    } return user
+}
+
+module.exports = { signup, login, loop, updateUser, updatePassword, sleep, greet, uploadProfileImage, fetchUser }
