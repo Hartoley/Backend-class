@@ -1,6 +1,7 @@
 const User = require('../model/userModel')
 const bcrypt = require('bcryptjs');
 const upload = require("../middleware/upload");
+const jwt = require("jsonwebtoken")
 
 
 const user = { name: "John Doe", email: "boluwa@gmail.com:", password: "password123" }
@@ -77,7 +78,18 @@ const login = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName
     }
-    res.status(200).send({ message: "User logged in successfully", user: userData })
+
+    const token = jwt.sign(
+        {
+            id: user._id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "31d" }
+    )
+    res.status(200).send({ message: "User logged in successfully", token, user: userData })
 }
 
 const updateUser = async (req, res) => {
@@ -130,7 +142,7 @@ const updatePassword = async (req, res) => {
 }
 
 const uploadProfileImage = async (req, res) => {
-    const { id } = req.params
+    const id = req.user.id
 
     if (!id) return res.status(400).json({ message: "ID is required" })
 
@@ -162,7 +174,7 @@ const loop = () => {
 const fetchUser = async (req, res) => {
 
 
-    const id = req.params.id
+    const id = req.user.id
     console.log("Received Id:", id)
 
     if (!id) {

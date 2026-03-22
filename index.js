@@ -17,6 +17,7 @@ app.use((req, res, next) => {
     if (req.headers['content-type']?.includes('multipart/form-data')) return next()
     express.json()(req, res, next)
 })
+
 app.use((req, res, next) => {
     if (req.headers['content-type']?.includes('multipart/form-data')) return next()
     express.urlencoded({ extended: true })(req, res, next)

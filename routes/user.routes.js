@@ -1,15 +1,18 @@
 const express = require("express")
 const { signup, login, loop, updateUser, updatePassword, uploadProfileImage, fetchUser } = require("../controller/signup.controller")
 const upload = require("../middleware/upload");
+const protect = require("../middleware/auth")
 const router = express.Router()
 const cloudinary = require("../config/cloudinary");
+
+
 router.post("/api/signup", signup)
 router.post("/api/login", login)
 router.put("/api/update-user/:id", updateUser)
 router.get("/api/loop", loop)
 router.put("/api/update-password/:id", updatePassword)
-router.post("/:id/upload-pic", upload.single("image"), uploadProfileImage)
-router.get("/:id", fetchUser)
+router.post("/upload-pic", protect, upload.single("image"), uploadProfileImage)
+router.get("/api", protect, fetchUser)
 
 router.post("/upload", (req, res) => {
     upload.single("image")(req, res, (err) => {
