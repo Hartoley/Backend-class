@@ -8,8 +8,7 @@ router.post("/api/login", login)
 router.put("/api/update-user/:id", updateUser)
 router.get("/api/loop", loop)
 router.put("/api/update-password/:id", updatePassword)
-// ✅ No upload middleware on the route — controller handles it
-router.post("/:id/upload-pic", uploadProfileImage)
+router.post("/:id/upload-pic", upload.single("image"), uploadProfileImage)
 router.get("/:id", fetchUser)
 
 router.post("/upload", (req, res) => {

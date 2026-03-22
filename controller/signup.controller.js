@@ -130,39 +130,23 @@ const updatePassword = async (req, res) => {
 }
 
 const uploadProfileImage = async (req, res) => {
-    const id = req.params.id
+    const { id } = req.params
 
-    if (!id) {
-        return res.status(400).json({ message: "ID is required" })
-    }
+    if (!id) return res.status(400).json({ message: "ID is required" })
+
+    if (!req.file) return res.status(400).json({ error: "No file received." })
 
     try {
         const user = await User.findById(id)
-        if (!user) {
-            return res.status(404).json({ message: "User not found" })
-        }
+        if (!user) return res.status(404).json({ message: "User not found" })
 
-        // Everything must live inside this callback
-        upload.single("image")(req, res, async (err) => {
-            if (err) {
-                return res.status(500).json({ error: err.message })
-            }
-            if (!req.file) {
-                return res.status(400).json({ error: "No file received." })
-            }
+        user.profileImage = req.file.path
+        await user.save()
 
-            try {
-                user.profileImage = req.file.path
-                await user.save()
-                return res.status(200).json({
-                    message: "Profile image updated successfully",
-                    profileImage: user.profileImage
-                })
-            } catch (saveError) {
-                return res.status(500).json({ message: "Failed to save", error: saveError.message })
-            }
+        return res.status(200).json({
+            message: "Profile image updated successfully",
+            profileImage: user.profileImage
         })
-
     } catch (error) {
         return res.status(500).json({ message: "Server error", error: error.message })
     }
